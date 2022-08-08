@@ -1,7 +1,7 @@
 {
-  "name": "wetube",
+  "name": "wetube_project",
   "version": "1.0.0",
-  "description": "The best way learn how to make watching vedio web page",
+  "description": "Learn how to make web-page like you-tube",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec babel-node index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kd02109/wetube_practice.git"
+    "url": "git+https://github.com/kd02109/wetube.git"
   },
   "author": "Junseok",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kd02109/wetube_practice/issues"
+    "url": "https://github.com/kd02109/wetube/issues"
   },
-  "homepage": "https://github.com/kd02109/wetube_practice#readme",
+  "homepage": "https://github.com/kd02109/wetube#readme",
   "dependencies": {
     "express": "^4.18.1"
   },
