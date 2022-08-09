@@ -1,4 +1,4 @@
-# Learn How to make web page like Youtube
+# Learn How to make web page like Youtube With nomadcoders
 
 ## 상세 정리 page: <a href="https://www.notion.so/Youtube-Clone-Coding-b6af64d2723743f1bb12f3cd74d87ad7" target="_blank">Go to my notion page🚀</a>
 
