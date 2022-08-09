@@ -1,4 +1,5 @@
 import express from "express";
+import logger from "morgan";
 
 const PORT = 9000;
 const app = express();
@@ -20,7 +21,7 @@ function handleHmoe(req, res) {
 function handleProtected(req, res) {
   return res.send("Welcome to the private lounage");
 }
-app.use(gossipMiddleware, protectionMiddleware);
+app.use(logger("dev"));
 app.get("/", handleHmoe);
 app.get("/login", (req, res) => {
   return res.send("This is a login page!");
