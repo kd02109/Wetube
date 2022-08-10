@@ -16,3 +16,28 @@
 
 - Learn about Server (request, respond) (2021.08.09)
 - Learn Middlewares(2021.08.09)
+
+### 4. ROUTER
+
+-Learn Router (2021.08.10)
+(1~4 global router)
+
+1. hmoepage "/"
+2. join "/join"
+3. login "/login"
+4. search "/search"
+
+5. edit "/edit" --> /users/edit
+6. delete "/delete" --> /users/delete
+
+7. watch video "/Watch video" --> /video/watch
+8. edit video "/edit video" --> /video/edit
+9. delete video "/delete video" --> /video/delete
+10. comment vide0 "/video comment" --> video/comment
+
+#### router 우리가 작업중인 주제를 기반으로 URL을 위와 같이 그룹화 해준다.
+
+#### code를 작성한 만큼 code를 간결화 하고 정리하는 것에 시간을 들여야 함을 상기해야한다!
+
+1. 각각의 파일을 활용 용도에 맞게 나누어서 분리
+2. router와 handler를 분리. handler는 충분히 많이 길어질 수 있다. router는 handler을 사용하는 입장이다. 즉 필요한 handler만을 불러와서 활용하도록 하자. 이때 globalController는 필요가 없다 모든 controller는 user 혹은 video와 연관되기 때문이다.

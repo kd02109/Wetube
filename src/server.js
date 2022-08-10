@@ -1,32 +1,18 @@
 import express from "express";
-import logger from "morgan";
+import morgan from "morgan";
+import globalRouter from "./routers/globalRouter";
+import userRouter from "./routers/userRouter";
+import videoRouter from "./routers/videoRouter";
 
 const PORT = 9000;
 const app = express();
-const gossipMiddleware = (req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-};
-const protectionMiddleware = (req, res, next) => {
-  const url = req.url;
-  if (url === "/protected") {
-    return res.send("<h1>Not Allowed</h1>");
-  }
-  console.log("Allowed");
-  next();
-};
-function handleHmoe(req, res) {
-  return res.end();
-}
-function handleProtected(req, res) {
-  return res.send("Welcome to the private lounage");
-}
-app.use(logger("dev"));
-app.get("/", handleHmoe);
-app.get("/login", (req, res) => {
-  return res.send("This is a login page!");
-});
-app.get("/protected", handleProtected);
+const logger = morgan("dev");
+
+app.use(logger);
+
+app.use("/", globalRouter);
+app.use("/videos", videoRouter);
+app.use("/users", userRouter);
 
 const handleListening = () =>
   console.log(`✅Server listening on port ${PORT} ❤️🚀`);
