@@ -1,9 +1,11 @@
 import express from "express";
-import { join, delet, edit } from "../controller/userController";
+import { profile, remove, edit, logout } from "../controller/userController";
 
 const userRouter = express.Router();
 
 userRouter.get("/edit", edit);
-userRouter.get("/delet", delet);
+userRouter.get("/delet", remove);
+userRouter.get("/logout", logout);
+userRouter.get(":id", profile);
 
 export default userRouter;

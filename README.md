@@ -27,13 +27,15 @@
 3. login "/login"
 4. search "/search"
 
-5. edit "/edit" --> /users/edit
-6. delete "/delete" --> /users/delete
+5. see profile --> user/:id
+6. delete "/delete" --> /user/delete
+7. edit "/edit" --> /user/edit
+8. logout --> /user/logout
 
-7. watch video "/Watch video" --> /video/watch
-8. edit video "/edit video" --> /video/edit
-9. delete video "/delete video" --> /video/delete
-10. comment vide0 "/video comment" --> video/comment
+9. watch video "/Watch video" --> /video/watch -->/video/:id
+10. upload video --> "/video/upload"
+11. edit video "/edit video" --> /video/edit --> /video/:id/edit
+12. delete video "/delete video" --> /video/delete --> /video/:id/delet
 
 #### router 우리가 작업중인 주제를 기반으로 URL을 위와 같이 그룹화 해준다.
 
