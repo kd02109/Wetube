@@ -43,3 +43,9 @@
 
 1. 각각의 파일을 활용 용도에 맞게 나누어서 분리
 2. router와 handler를 분리. handler는 충분히 많이 길어질 수 있다. router는 handler을 사용하는 입장이다. 즉 필요한 handler만을 불러와서 활용하도록 하자. 이때 globalController는 필요가 없다 모든 controller는 user 혹은 video와 연관되기 때문이다.
+
+### 5. PUG
+
+- pug란?
+- pug의 사용법
+- pug의 기능(pratials,extending,use vairable,conditional, iteration, mixins)

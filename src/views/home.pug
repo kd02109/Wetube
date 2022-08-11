@@ -1,0 +1,12 @@
+extends base.pug
+include mixin/video.pug
+
+
+block content
+    h2 Welcome here you will see the tranding video
+    ul
+        each list in fakeVideo
+            +video(list) 
+        else 
+            li 
+                span Nothing else!
