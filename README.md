@@ -26,12 +26,10 @@
 2. join "/join"
 3. login "/login"
 4. search "/search"
-
 5. see profile --> user/:id
 6. delete "/delete" --> /user/delete
 7. edit "/edit" --> /user/edit
 8. logout --> /user/logout
-
 9. watch video "/Watch video" --> /video/watch -->/video/:id
 10. upload video --> "/video/upload"
 11. edit video "/edit video" --> /video/edit --> /video/:id/edit
@@ -49,3 +47,7 @@
 - pug란?
 - pug의 사용법
 - pug의 기능(pratials,extending,use vairable,conditional, iteration, mixins)
+
+### 6. MongoDB AND MONGOOSE
+
+- Learn about post method! about Express!
