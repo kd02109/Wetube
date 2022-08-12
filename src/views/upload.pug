@@ -1,0 +1,11 @@
+extends base.pug
+
+
+block content
+    if errorMassage 
+        span=errorMassage 
+    form(method="post")
+        input(name="title", placeholder="Title", type="text", required)
+        input(name="description", placeholder="Description", type="text", required)
+        input(name="hashtags", placeholder="Hachtags, separated by comma.", type="text", required)
+        input(type="submit")

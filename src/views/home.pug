@@ -3,9 +3,9 @@ include mixin/video.pug
 
 
 block content
-    h2 Welcome here you will see the tranding video
-    ul
-        each list in fakeVideo
+    a(href="videos/upload") Video upload &rarr;
+    ul 
+        each list in videos
             +video(list) 
         else 
             li 

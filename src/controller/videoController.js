@@ -1,57 +1,28 @@
-const fakeVideo = [
-  {
-    title: "#video1",
-    rating: 5,
-    comment: 2,
-    createdAt: "2min",
-    view: 1,
-    id: 1,
-  },
-  {
-    title: "#video2",
-    rating: 5,
-    comment: 2,
-    createdAt: "2min",
-    view: 59,
-    id: 2,
-  },
-  {
-    title: "#video3",
-    rating: 5,
-    comment: 2,
-    createdAt: "2min",
-    view: 59,
-    id: 3,
-  },
-  {
-    title: "#video3",
-    rating: 5,
-    comment: 2,
-    createdAt: "2min",
-    view: 59,
-    id: 4,
-  },
-];
+import Video from "../models/Video";
 
-export function homepage(req, res) {
-  return res.render("home", { pageTitle: "Home", fakeVideo });
-}
+export const homepage = async (req, res) => {
+  //db에서 데이터가 완전히 전달 될때까지 기다린 후 실행이 되어야 한다.
+  try {
+    const videos = await Video.find({});
+    return res.render("home", { pageTitle: "Home", videos: videos });
+  } catch (error) {
+    return res.render("server-error", error);
+  }
+};
 
 export function edit(req, res) {
   const { id } = req.params;
-  const video = fakeVideo[id - 1];
-  return res.render("edit", { pageTitle: `${video.title} Edit`, video });
+  return res.render("edit", { pageTitle: `Edit` });
 }
 
 export function search(req, res) {
   return res.send("Search video");
 }
 
-export function watch(req, res) {
+export async function watch(req, res) {
   const id = req.params.id; //const {id} = req.params
-  const video = fakeVideo[id - 1];
-  console.log("Show video", id);
-  return res.render("watch", { pageTitle: `Watch ${video.title}`, video });
+  const video = await Video.findById(id);
+  return res.render("watch", { pageTitle: video.title, video });
 }
 
 export function removeVideo(req, res) {
@@ -59,14 +30,34 @@ export function removeVideo(req, res) {
   return res.send("delete video");
 }
 export function upload(req, res) {
-  return res.send("video upload");
+  return res.render("upload", { pageTitle: "Upload" });
 }
 
-export const editTitle = (req, res) => {
+export const editTitle = async (req, res) => {
   const { id } = req.params;
   console.log(req.body);
   const { title } = req.body;
-  console.log(title);
-  fakeVideo[id - 1].title = title;
+  const video = await Video.findById(id);
+  video.title = title;
+  video.views = 0;
+  video.rating = 0;
+  await video.save();
   return res.redirect(`/videos/${id}`);
+};
+
+export const saevUpload = async (req, res) => {
+  const { title, description, hashtags } = req.body;
+  try {
+    await Video.create({
+      title: title,
+      description: description,
+      hashtags: hashtags.split(",").map((word) => `#${word}`),
+    });
+    return res.redirect(`/`);
+  } catch (error) {
+    return res.render("upload", {
+      pageTitle: "Upload",
+      errorMassage: error._message,
+    });
+  }
 };

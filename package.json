@@ -4,7 +4,7 @@
   "description": "Learn how to make web-page like you-tube",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node src/server.js",
+    "dev": "nodemon --exec babel-node src/init.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/kd02109/wetube#readme",
   "dependencies": {
     "express": "^4.18.1",
+    "mongoose": "^6.5.2",
     "morgan": "^1.10.0",
     "pug": "^3.0.2"
   },

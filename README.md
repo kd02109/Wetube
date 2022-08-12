@@ -51,3 +51,5 @@
 ### 6. MongoDB AND MONGOOSE
 
 - Learn about post method! about Express!
+- MongoDB, Mongoose 설치
+- Use MongoDB

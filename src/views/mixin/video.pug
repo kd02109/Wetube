@@ -1,8 +1,8 @@
 mixin video(info)
     div 
         a(href="/videos/"+info.id)=info.title
-        ul 
-            li rating: #{info.rating}
-            li comments: #{info.comment}
-            li post time: #{info.createdAt}
-            li views: #{info.view}
+    div 
+        p=info.description 
+        span=info.hashtag
+        small=info.createdAt
+        hr
