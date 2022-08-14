@@ -14,12 +14,17 @@ const videoSchema = new mongoose.Schema({
   createdAt: { type: Date, required: true, default: Date.now }, // required:date가 반드시 포함되어야 한다.
   hashtags: [{ type: String, trim: true }],
   meta: {
-    views: { type: Number, dafault: 0, required: true },
-    rating: { type: Number, dafault: 0, required: true },
+    views: { type: Number, default: 0, required: true },
+    rating: { type: Number, default: 0, required: true },
   },
 });
 
-const movieModel = mongoose.model("video", videoSchema);
+videoSchema.static("formatHashtags", function (hashtags) {
+  return hashtags
+    .split(",")
+    .map((word) => (word.startsWith("#") ? word : `#${word}`));
+});
+const movieModel = mongoose.model("Video", videoSchema);
 export default movieModel;
 
 //이제는 우리가 올린 비디오를 모두가 알 수 있도록 만들어야 한다.

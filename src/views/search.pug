@@ -1,0 +1,11 @@
+extends base.pug
+include mixin/video.pug
+
+
+block content 
+    form(method="get") 
+        input(name="title", type="text", placeholder="Search wetube's title!")
+        input(type="submit", value="Search")
+    div 
+    each video in videos 
+        +video(video)
