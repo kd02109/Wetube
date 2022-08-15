@@ -1,0 +1,17 @@
+extends base
+
+block content   
+    if errorMassage 
+        span=errorMassage
+    form(method="post")
+        input(type="email", name="email", required, placeholder="Write your email")
+        input(type="text", name="username", required, placeholder="Wirte ID")
+        input(type="password", name="password1", required, placeholder="Password")
+        input(type="password", name="password2", required, placeholder="Confirm your password")
+        input(type="text", name="name", required, placeholder="Wirte your name")
+        input(type="location", name="location", placeholder="location")
+        input(type="submit", value="JOIN")
+    hr
+    div 
+        span Aleready have an count? 
+        a(href="/login")  Login &rarr;

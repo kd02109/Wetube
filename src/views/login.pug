@@ -1,0 +1,13 @@
+extends base
+
+block content   
+    if errorMassage 
+        span=errorMassage
+    form(method="post")
+        input(type="text", name="username", required, placeholder="Wirte ID")
+        input(type="password", name="password", required, placeholder="Password")
+        input(type="submit", value="LOGIN")
+    hr
+    div 
+        span Don't have an count? creat Account!  
+        a(href="/join")  JOIN &rarr;

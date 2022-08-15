@@ -53,3 +53,7 @@
 - Learn about post method! about Express!
 - MongoDB, Mongoose 설치
 - Use MongoDB
+
+### 7. USER AUTHENTICATION
+
+- Learn basic Join,login,cookie

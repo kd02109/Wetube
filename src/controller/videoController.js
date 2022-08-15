@@ -6,7 +6,7 @@ export const homepage = async (req, res) => {
     const videos = await Video.find({}).sort({ createdAt: "desc" });
     return res.render("home", { pageTitle: "Home", videos: videos });
   } catch (error) {
-    return res.render("server-error", error);
+    return res.status(404).render("server-error", error);
   }
 };
 
@@ -14,7 +14,7 @@ export async function edit(req, res) {
   const { id } = req.params;
   const video = await Video.findById(id);
   if (!video) {
-    return res.render("404", { pageTitle: "Video not found!" });
+    return res.status(404).render("404", { pageTitle: "Video not found!" });
   }
   return res.render("edit", { pageTitle: `Edit`, video });
 }
@@ -25,7 +25,7 @@ export async function watch(req, res) {
   if (video) {
     return res.render("watch", { pageTitle: video.title, video });
   }
-  return res.render("404", { pageTitle: "Video not found!" });
+  return res.status(404).render("404", { pageTitle: "Video not found!" });
 }
 
 export async function deleteVideo(req, res) {
@@ -43,7 +43,7 @@ export const editTitle = async (req, res) => {
   const video = await Video.exists({ _id: id });
   const { title, description, hashtags } = req.body;
   if (video === false) {
-    return res.render("404", { pageTitle: "Video not found!" });
+    return res.status(404).render("404", { pageTitle: "Video not found!" });
   }
   await Video.findByIdAndUpdate(id, {
     title,
@@ -64,7 +64,7 @@ export const saevUpload = async (req, res) => {
     return res.redirect(`/`);
   } catch (error) {
     console.log(error);
-    return res.render("upload", {
+    return res.status(404).render("upload", {
       pageTitle: "Upload",
       errorMassage: error._message,
     });
