@@ -161,3 +161,79 @@ export async function finishGithubLogin(req, res) {
     return res.redirect("/login");
   }
 }
+
+export async function kakaoLoginStart(req, res) {
+  const baseURL = "https://kauth.kakao.com/oauth/authorize";
+  const config = {
+    client_id: process.env.KAKAO_CLIENT,
+    redirect_uri: process.env.KAKAO_URL,
+    response_type: "code",
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalURL = `${baseURL}?${params}`;
+  return res.redirect(finalURL);
+}
+
+export async function kakaoLoginFinish(req, res) {
+  const baseURL = "https://kauth.kakao.com/oauth/token";
+  const config = {
+    grant_type: "authorization_code",
+    client_id: process.env.KAKAO_CLIENT,
+    redirect_uri: process.env.KAKAO_URL,
+    code: req.query.code,
+    client_secret: process.env.KAKAO_SECRET,
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalURL = `${baseURL}?${params}`;
+
+  const tockenRequest = await (
+    await fetch(finalURL, {
+      method: "POST",
+    })
+  ).json();
+
+  if ("access_token" in tockenRequest) {
+    const { access_token } = tockenRequest;
+    const apiURL = " https://kapi.kakao.com/";
+    const userRequest = await (
+      await fetch(`${apiURL}v1/user/access_token_info`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+    ).json();
+    console.log(userRequest);
+    const emailRequest = await (
+      await fetch(`${apiURL}v2/user/me`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+    ).json();
+    console.log(emailRequest.kakao_account);
+    const kakaoAccount = emailRequest.kakao_account;
+    const kakaoProfile = kakaoAccount.profile;
+    if (
+      kakaoAccount.is_email_valid === false ||
+      kakaoAccount.is_email_verified === false
+    ) {
+      return res.redirect("/login");
+    }
+    let user = await User.findOne({ email: kakaoAccount.email });
+    if (!user) {
+      user = await User.create({
+        name: kakaoProfile.nickname,
+        kakaoId: true,
+        username: kakaoProfile.nickname,
+        email: kakaoAccount.email,
+        password: "",
+        avatarUrl: kakaoProfile.profile_image_url,
+      });
+    }
+    req.session.loggedIn = true;
+    req.session.user = user;
+    return res.redirect("/");
+  } else {
+    return res.redirect("/login");
+  }
+}
