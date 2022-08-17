@@ -1,12 +1,9 @@
 import User from "../models/User";
+import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
 export function join(req, res) {
   return res.render("join", { pageTitle: "JOIN" });
-}
-
-export function remove(req, res) {
-  return res.send("Delet ID");
 }
 
 export function edit(req, res) {
@@ -19,7 +16,7 @@ export function login(req, res) {
 
 export async function postLogin(req, res) {
   const { username, password } = req.body;
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ username, githubId: false });
   const pageTitle = "Login";
 
   if (!user.username) {
@@ -42,7 +39,8 @@ export async function postLogin(req, res) {
 }
 
 export function logout(req, res) {
-  return res.send("Logout");
+  req.session.destroy();
+  return res.redirect("/");
 }
 
 export function profile(req, res) {
@@ -81,5 +79,85 @@ export async function uploadJoin(req, res) {
         errorMassage: error._message,
       });
     }
+  }
+}
+
+export function startGithubLogin(req, res) {
+  const baseURL = `https://github.com/login/oauth/authorize`;
+  const config = {
+    client_id: process.env.GH_CLIENT,
+    allow_signup: false,
+    scope: "read:user user:email",
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalURL = `${baseURL}?${params}`;
+  return res.redirect(finalURL);
+}
+
+export async function finishGithubLogin(req, res) {
+  const baseURL = "https://github.com/login/oauth/access_token";
+  const config = {
+    client_id: process.env.GH_CLIENT,
+    client_secret: process.env.GH_SECRET,
+    code: req.query.code,
+  };
+  console.log(config);
+  const params = new URLSearchParams(config).toString();
+  const finalURL = `${baseURL}?${params}`;
+  const tockenRequest = await (
+    await fetch(finalURL, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+  ).json();
+
+  if ("access_token" in tockenRequest) {
+    const { access_token } = tockenRequest;
+    const apiURL = "https://api.github.com/";
+    const userRequest = await (
+      await fetch(`${apiURL}user`, {
+        headers: {
+          Authorization: `token ${access_token}`,
+        },
+      })
+    ).json();
+    console.log(userRequest);
+    const emailRequest = await (
+      await fetch(`${apiURL}user/emails`, {
+        headers: {
+          Authorization: `token ${access_token}`,
+        },
+      })
+    ).json();
+    const emailObj = emailRequest.find(
+      (email) => email.primary === true && email.verified === true
+    );
+    console.log(emailObj);
+    if (!emailObj) {
+      return res.redirect("/login");
+    }
+    const existingUser = await User.findOne({ email: emailObj.email });
+    if (existingUser) {
+      req.session.loggedIn = true;
+      req.session.user = existingUser;
+      return res.redirect("/");
+    } else {
+      const user = await User.create({
+        avatarUrl: userRequest.avatar_url,
+        email: emailObj.email,
+        username: userRequest.login,
+        password: "",
+        name: userRequest.name,
+        githubId: true,
+        location: userRequest.location,
+      });
+      req.session.loggedIn = true;
+      req.session.user = user;
+      return res.redirect("/");
+    }
+  } else {
+    return res.redirect("/login");
   }
 }
