@@ -11,6 +11,7 @@ import {
   postChangePassword,
 } from "../controller/userController";
 import {
+  multerMiddleware,
   passwordUsersOnlyMiddleware,
   protectMiddleware,
   publicOnlyMiddleware,
@@ -18,7 +19,11 @@ import {
 
 const userRouter = express.Router();
 
-userRouter.route("/edit").all(protectMiddleware).get(getEdit).post(postEdit);
+userRouter
+  .route("/edit")
+  .all(protectMiddleware)
+  .get(getEdit)
+  .post(multerMiddleware.single("avatar"), postEdit);
 userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
 userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
 userRouter.get(":id", profile);

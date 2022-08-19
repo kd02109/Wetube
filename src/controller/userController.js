@@ -13,10 +13,12 @@ export function getEdit(req, res) {
 export async function postEdit(req, res) {
   const {
     session: {
-      user: { _id, email: sessionEmail, username: sessionUsername },
+      user: { _id, email: sessionEmail, username: sessionUsername, avatarUrl },
     },
     body: { email, username, name, location },
+    file,
   } = req;
+  console.log(req.session.user);
   let change = [];
   if (sessionEmail !== email) {
     change.push({ email });
@@ -36,6 +38,8 @@ export async function postEdit(req, res) {
   const userUpdate = await User.findByIdAndUpdate(
     _id,
     {
+      //유저가 이미지를 변경하지 않는다면, 어떻게 될까?
+      avatarUrl: file ? file.path : avatarUrl,
       name,
       email,
       username,
@@ -53,7 +57,7 @@ export function login(req, res) {
 
 export async function postLogin(req, res) {
   const { username, password } = req.body;
-  const user = await User.findOne({ username, githubId: false });
+  const user = await User.findOne({ username, socialOnly: false });
   const pageTitle = "Login";
 
   if (!user.username) {
@@ -185,7 +189,7 @@ export async function finishGithubLogin(req, res) {
         username: userRequest.login,
         password: "",
         name: userRequest.name,
-        githubId: true,
+        socialOnly: true,
         location: userRequest.location,
       });
       req.session.loggedIn = true;
@@ -256,7 +260,7 @@ export async function kakaoLoginFinish(req, res) {
     if (!user) {
       user = await User.create({
         name: kakaoProfile.nickname,
-        kakaoId: true,
+        socialOnly: true,
         username: kakaoProfile.nickname,
         email: kakaoAccount.email,
         password: "",
