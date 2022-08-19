@@ -6,8 +6,45 @@ export function join(req, res) {
   return res.render("join", { pageTitle: "JOIN" });
 }
 
-export function edit(req, res) {
-  return res.send("Edit User");
+export function getEdit(req, res) {
+  return res.render("edit-profile", { pageTitle: "EDIT" });
+}
+
+export async function postEdit(req, res) {
+  const {
+    session: {
+      user: { _id, email: sessionEmail, username: sessionUsername },
+    },
+    body: { email, username, name, location },
+  } = req;
+  let change = [];
+  if (sessionEmail !== email) {
+    change.push({ email });
+  }
+  if (sessionUsername !== username) {
+    change.push({ username });
+  }
+  if (change.length > 0) {
+    const foundUser = await User.findOne({ $or: change });
+    if (foundUser && foundUser._id.toString() !== _id) {
+      return res.status(400).render("edit-profile", {
+        pageTitle: "EDIT",
+        errorMessage: "This username/email is already taken.",
+      });
+    }
+  }
+  const userUpdate = await User.findByIdAndUpdate(
+    _id,
+    {
+      name,
+      email,
+      username,
+      location,
+    },
+    { new: true }
+  );
+  req.session.user = userUpdate;
+  return res.redirect("/users/edit");
 }
 
 export function login(req, res) {
@@ -101,7 +138,7 @@ export async function finishGithubLogin(req, res) {
     client_secret: process.env.GH_SECRET,
     code: req.query.code,
   };
-  console.log(config);
+
   const params = new URLSearchParams(config).toString();
   const finalURL = `${baseURL}?${params}`;
   const tockenRequest = await (
@@ -123,7 +160,6 @@ export async function finishGithubLogin(req, res) {
         },
       })
     ).json();
-    console.log(userRequest);
     const emailRequest = await (
       await fetch(`${apiURL}user/emails`, {
         headers: {
@@ -134,7 +170,6 @@ export async function finishGithubLogin(req, res) {
     const emailObj = emailRequest.find(
       (email) => email.primary === true && email.verified === true
     );
-    console.log(emailObj);
     if (!emailObj) {
       return res.redirect("/login");
     }
@@ -202,7 +237,6 @@ export async function kakaoLoginFinish(req, res) {
         },
       })
     ).json();
-    console.log(userRequest);
     const emailRequest = await (
       await fetch(`${apiURL}v2/user/me`, {
         headers: {
@@ -210,7 +244,6 @@ export async function kakaoLoginFinish(req, res) {
         },
       })
     ).json();
-    console.log(emailRequest.kakao_account);
     const kakaoAccount = emailRequest.kakao_account;
     const kakaoProfile = kakaoAccount.profile;
     if (
@@ -236,4 +269,35 @@ export async function kakaoLoginFinish(req, res) {
   } else {
     return res.redirect("/login");
   }
+}
+
+export async function getChangePassword(req, res) {
+  return res.render("change-password", { pageTitle: "Change Password" });
+}
+export async function postChangePassword(req, res) {
+  const {
+    session: {
+      user: { _id, password },
+    },
+    body: { oldPassword, newPassword, newPasswordConfiguration },
+  } = req;
+  if (newPassword !== newPasswordConfiguration) {
+    return res.status(400).render("change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The password does not match configuration",
+    });
+  }
+  const compare = await bcrypt.compare(oldPassword, password);
+  if (!compare) {
+    return res.status(400).render("change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The current password does is incorrect.",
+    });
+  }
+  const user = await User.findById(_id);
+  user.password = newPassword;
+  await user.save();
+  req.session.user.password = user.password;
+  req.session.destroy();
+  return res.redirect("/login");
 }

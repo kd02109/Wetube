@@ -1,21 +1,32 @@
 import express from "express";
 import {
   profile,
-  edit,
-  logout,
+  getEdit,
+  postEdit,
   startGithubLogin,
   finishGithubLogin,
   kakaoLoginStart,
   kakaoLoginFinish,
+  getChangePassword,
+  postChangePassword,
 } from "../controller/userController";
+import {
+  passwordUsersOnlyMiddleware,
+  protectMiddleware,
+  publicOnlyMiddleware,
+} from "../middlewares";
 
 const userRouter = express.Router();
 
-userRouter.get("/edit", edit);
-userRouter.get("/logout", logout);
-userRouter.get("/github/start", startGithubLogin);
-userRouter.get("/github/finish", finishGithubLogin);
+userRouter.route("/edit").all(protectMiddleware).get(getEdit).post(postEdit);
+userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
+userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
 userRouter.get(":id", profile);
-userRouter.get("/kakao/start", kakaoLoginStart);
-userRouter.get("/kakao/finish", kakaoLoginFinish);
+userRouter.get("/kakao/start", publicOnlyMiddleware, kakaoLoginStart);
+userRouter.get("/kakao/finish", publicOnlyMiddleware, kakaoLoginFinish);
+userRouter
+  .route("/change-password")
+  .all(passwordUsersOnlyMiddleware)
+  .get(getChangePassword)
+  .post(postChangePassword);
 export default userRouter;
