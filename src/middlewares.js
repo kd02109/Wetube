@@ -37,6 +37,15 @@ export const passwordUsersOnlyMiddleware = (req, res, next) => {
   }
 };
 
-export const multerMiddleware = multer({
-  dest: "uploads/",
+export const multerMiddlewareAvatar = multer({
+  dest: "uploads/avatar/",
+  limits: {
+    fileSize: 3000000,
+  },
+});
+export const multerMiddlewareVideo = multer({
+  dest: "uploads/video/",
+  limits: {
+    fileSize: 10000000,
+  },
 });

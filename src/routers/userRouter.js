@@ -11,7 +11,7 @@ import {
   postChangePassword,
 } from "../controller/userController";
 import {
-  multerMiddleware,
+  multerMiddlewareAvatar,
   passwordUsersOnlyMiddleware,
   protectMiddleware,
   publicOnlyMiddleware,
@@ -23,10 +23,10 @@ userRouter
   .route("/edit")
   .all(protectMiddleware)
   .get(getEdit)
-  .post(multerMiddleware.single("avatar"), postEdit);
+  .post(multerMiddlewareAvatar.single("avatar"), postEdit);
 userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
 userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
-userRouter.get(":id", profile);
+userRouter.get("/:id([0-9a-f]{24})", profile);
 userRouter.get("/kakao/start", publicOnlyMiddleware, kakaoLoginStart);
 userRouter.get("/kakao/finish", publicOnlyMiddleware, kakaoLoginFinish);
 userRouter

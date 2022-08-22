@@ -1,0 +1,6 @@
+extends base
+include mixin/video.pug
+
+block content  
+        each list in user.videos
+            +video(list) 

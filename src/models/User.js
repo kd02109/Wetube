@@ -8,13 +8,14 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String },
   name: { type: String },
+  videos: [{ type: mongoose.Schema.ObjectId, ref: "Video" }],
   location: String,
 });
 
 userSchema.pre("save", async function () {
-  console.log("BEFORE HASH:", this.password);
-  this.password = await bcrypt.hash(this.password, 5);
-  console.log("HASH:", this.password);
+  if (this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 5);
+  }
 });
 
 const userModel = mongoose.model("User", userSchema);

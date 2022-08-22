@@ -4,7 +4,9 @@ extends base.pug
 block content
     if errorMassage 
         span=errorMassage 
-    form(method="post")
+    form(method="post",enctype="multipart/form-data")
+        label(for="video") Video UPload
+        input(type="file",name="video",ID="video", accept="video/*",required) 
         input(name="title", placeholder="Title", type="text", required)
         input(name="description", placeholder="Description", type="text", required)
         input(name="hashtags", placeholder="Hachtags, separated by comma.", type="text", required)

@@ -1,4 +1,5 @@
 import Video from "../models/Video";
+import User from "../models/User";
 
 export const homepage = async (req, res) => {
   //db에서 데이터가 완전히 전달 될때까지 기다린 후 실행이 되어야 한다.
@@ -12,16 +13,23 @@ export const homepage = async (req, res) => {
 
 export async function edit(req, res) {
   const { id } = req.params;
+  const {
+    user: { _id },
+  } = req.session;
   const video = await Video.findById(id);
   if (!video) {
     return res.status(404).render("404", { pageTitle: "Video not found!" });
+  }
+  if (String(video.owner) !== String(_id)) {
+    return res.status(403).redirect("/");
+    //forbiden=403
   }
   return res.render("edit", { pageTitle: `Edit`, video });
 }
 
 export async function watch(req, res) {
   const id = req.params.id; //const {id} = req.params
-  const video = await Video.findById(id);
+  const video = await Video.findById(id).populate("owner");
   if (video) {
     return res.render("watch", { pageTitle: video.title, video });
   }
@@ -30,7 +38,23 @@ export async function watch(req, res) {
 
 export async function deleteVideo(req, res) {
   const { id } = req.params;
+  const {
+    user: { _id },
+  } = req.session;
+  const video = await Video.findById(id);
+  const user = await User.findById(_id);
+  if (!video) {
+    return res.status(404).render("404", { pageTitle: "Video not found!" });
+  }
+
+  if (String(video.owner) !== String(_id)) {
+    return res.status(403).redirect("/");
+    //forbiden=403
+  }
+
   await Video.findByIdAndDelete(id);
+  user.videos.splice(user.videos.indexOf(id), 1);
+  user.save();
   return res.redirect("/");
 }
 export async function upload(req, res) {
@@ -40,11 +64,21 @@ export async function upload(req, res) {
 
 export const editTitle = async (req, res) => {
   const { id } = req.params;
-  const video = await Video.exists({ _id: id });
+  const video = await Video.findById(id);
   const { title, description, hashtags } = req.body;
+  const {
+    user: { _id },
+  } = req.session;
   if (video === false) {
     return res.status(404).render("404", { pageTitle: "Video not found!" });
   }
+
+  if (String(video.owner) !== String(_id)) {
+    return res.status(403).redirect("/");
+
+    //forbiden=403
+  }
+
   await Video.findByIdAndUpdate(id, {
     title,
     description,
@@ -54,13 +88,23 @@ export const editTitle = async (req, res) => {
 };
 
 export const saevUpload = async (req, res) => {
+  const {
+    user: { _id },
+  } = req.session;
+  const { path: fileUrl } = req.file;
   const { title, description, hashtags } = req.body;
   try {
-    await Video.create({
+    const newVideo = await Video.create({
       title,
       description,
+      fileUrl,
+      owner: _id,
       hashtags: Video.formatHashtags(hashtags),
     });
+    const user = await User.findById(_id);
+    user.videos.push(newVideo._id);
+    await user.save();
+    //이떄 hash가 일어나기 때문에 수정이
     return res.redirect(`/`);
   } catch (error) {
     console.log(error);

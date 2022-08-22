@@ -7,7 +7,7 @@ import {
   editTitle,
   saevUpload,
 } from "../controller/videoController";
-import { protectMiddleware } from "../middlewares";
+import { multerMiddlewareVideo, protectMiddleware } from "../middlewares";
 
 const videoRouter = express.Router();
 
@@ -20,7 +20,7 @@ videoRouter
   .route("/upload")
   .all(protectMiddleware)
   .get(upload)
-  .post(saevUpload);
+  .post(multerMiddlewareVideo.single("video"), saevUpload);
 videoRouter
   .route("/:id([a-f0-9]{24})/edit")
   .all(protectMiddleware)

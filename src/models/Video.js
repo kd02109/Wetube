@@ -13,10 +13,12 @@ const videoSchema = new mongoose.Schema({
   description: { type: String, required: true, trim: true },
   createdAt: { type: Date, required: true, default: Date.now }, // required:date가 반드시 포함되어야 한다.
   hashtags: [{ type: String, trim: true }],
+  fileUrl: { type: String, required: true },
   meta: {
     views: { type: Number, default: 0, required: true },
     rating: { type: Number, default: 0, required: true },
   },
+  owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
 });
 
 videoSchema.static("formatHashtags", function (hashtags) {

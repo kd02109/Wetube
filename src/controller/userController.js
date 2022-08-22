@@ -1,4 +1,5 @@
 import User from "../models/User";
+import Video from "../models/Video";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
@@ -84,8 +85,16 @@ export function logout(req, res) {
   return res.redirect("/");
 }
 
-export function profile(req, res) {
-  return res.send("See user");
+export async function profile(req, res) {
+  const { id } = req.params;
+  const user = await User.findById(id).populate("videos");
+  if (!user) {
+    return res.status(404).render("404", { pageTitle: "NOT FOUND" });
+  }
+  return res.render("profile", {
+    pageTitle: `${user.name} Profile`,
+    user,
+  });
 }
 
 export async function uploadJoin(req, res) {
