@@ -58,3 +58,7 @@
 
 - Learn basic Join,login,cookie
 - Learn Github Login
+
+### 8. file uploads using multer
+
+### 9. webpack with ready frontend
