@@ -4,7 +4,9 @@ import User from "../models/User";
 export const homepage = async (req, res) => {
   //db에서 데이터가 완전히 전달 될때까지 기다린 후 실행이 되어야 한다.
   try {
-    const videos = await Video.find({}).sort({ createdAt: "desc" });
+    const videos = await Video.find({})
+      .sort({ createdAt: "desc" })
+      .populate("owner");
     return res.render("home", { pageTitle: "Home", videos: videos });
   } catch (error) {
     return res.status(404).render("server-error", error);

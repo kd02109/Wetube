@@ -1,0 +1,32 @@
+@import "../config/variables";
+
+header {
+  padding: 10px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .header__logo {
+    color: $red;
+    font-size: 40px;
+  }
+  ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    li {
+      margin-left: 30px;
+      text-transform: uppercase;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    i {
+      font-size: 17px;
+    }
+  }
+  .header__btn {
+    background-color: white;
+    color: $bg;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+}

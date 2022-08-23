@@ -3,9 +3,14 @@ include mixin/video.pug
 
 
 block content
-    ul 
-        each list in videos
-            +video(list) 
-        else 
-            li 
-                span Nothing else!
+    div.video-grid
+            each list in videos
+                +video(list) 
+                +video(list) 
+                +video(list) 
+                +video(list) 
+                +video(list) 
+                +video(list) 
+                +video(list) 
+            else 
+                span.empty__message Nothing else!

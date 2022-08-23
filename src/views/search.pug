@@ -3,9 +3,12 @@ include mixin/video.pug
 
 
 block content 
-    form(method="get") 
+    form(method="get").search-form 
         input(name="title", type="text", placeholder="Search wetube's title!")
         input(type="submit", value="Search")
-    div 
-    each video in videos 
-        +video(video)
+    
+    div.video-grid
+            each list in videos
+                +video(list) 
+            else 
+                span.empty__message Nothing else!
