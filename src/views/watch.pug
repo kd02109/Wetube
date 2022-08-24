@@ -1,16 +1,39 @@
 extends base.pug
 
-block content 
-    video(src="/"+video.fileUrl,controls) 
-    div 
-        p=video.description
-        small=video.createdAt
-    div 
-        small Uploaded by 
-            a(href=`/users/${video.owner._id}`)=video.owner.name
-    if String(video.owner._id) === String(user._id) 
+block content
+    div#videoContainer
+        video(src="/"+video.fileUrl) 
+        div#videoControls.videoControls
+            div.videoControls__play
+                span#play.videoControls__playBtn
+                        i.fas.fa-play
+
+                div.videoControls__time
+                    span#currenTime 00:00
+                    span  | 
+                    span#totalTime 00:00
+            input#timeline.videoControls__timeline(type="range", step=1 ,min=0 ,value = 0)
+            div.videoControls__volume  
+                input#volumn(type="range", step=0.1 ,min=0, max=1,value = 0.2)
+                span#mute
+                     i.fas.fa-volume-up
+            div 
+                span#fullScreen 
+                    i.fas.fa-expand
+
+    //-
         div 
-            br
-            a(href=`${video.id}/edit`) Edit video &rarr;
-            br
-            a(href=`${video.id}/delet`) Delete video &rarr;
+            p=video.description
+            small=video.createdAt
+        div 
+            small Uploaded by 
+                a(href=`/users/${video.owner._id}`)=video.owner.name
+        if String(video.owner._id) === String(user._id) 
+            div 
+                br
+                a(href=`${video.id}/edit`) Edit video &rarr;
+                br
+                a(href=`${video.id}/delet`) Delete video &rarr;
+
+block scripts   
+    script(src="/assets/js/videoPlayer.js")         
