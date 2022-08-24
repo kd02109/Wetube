@@ -1,22 +1,23 @@
 .search-form {
   display: flex;
-  flex-direction: column;
-  max-width: 320px;
-  margin: 0 auto;
+  margin-bottom: 10px;
+  position: relative;
 
-  input {
+  button {
     all: unset;
-    padding: 15px 20px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background-color: black;
-    margin-bottom: 45px;
-    color: white;
   }
-  input[type="submit"] {
-    background-color: rgba(255, 255, 255, 0.3);
+  button {
+    background-color: rgba(0, 0, 0, 0);
     padding: 10px;
     text-align: center;
-    text-transform: uppercase;
+    border-radius: 10px;
+    cursor: pointer;
+    position: absolute;
+    height: 50%;
+    right: 10%;
+    top: 12%;
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
   }
 }

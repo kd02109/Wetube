@@ -1,6 +1,12 @@
 extends base
 include mixin/video.pug
 
-block content  
+block content
+    div.profile__data
+        img(src=`${user.socialOnly ? "" : "/"}`+user.avatarUrl).avatar 
+        h3=user.name
+    div.video-grid
         each list in user.videos
             +video(list) 
+        else 
+            span.empty__message Nothing else!

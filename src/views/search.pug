@@ -5,7 +5,8 @@ include mixin/video.pug
 block content 
     form(method="get").search-form 
         input(name="title", type="text", placeholder="Search wetube's title!")
-        input(type="submit", value="Search")
+        button 
+            i.fas.fa-search
     
     div.video-grid
             each list in videos

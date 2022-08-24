@@ -15,8 +15,12 @@ header
                 li 
                     a(href="/logout") LogOut 
                 li 
-                    a(href=`/users/${user._id}`) My Profile
-                li 
                     a(href="/users/edit") Edit Profile
                 li 
                     a(href="/videos/upload") Uploadd Video
+                li 
+                    a(href=`/users/${user._id}`)
+                        if !user.avatarUrl
+                            span.header_avatar--icon 😁
+                        else 
+                            img.header_avatar(src=`${user.socialOnly ? "" : "/"}`+user.avatarUrl)

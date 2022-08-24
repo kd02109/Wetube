@@ -126,7 +126,7 @@ export async function search(req, res) {
       title: {
         $regex: new RegExp(keyward, "i"),
       },
-    });
+    }).populate("owner");
   }
   console.log(videos);
   return res.render("search", { pageTitle: "Search", videos });

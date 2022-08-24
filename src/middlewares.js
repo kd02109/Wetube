@@ -28,7 +28,7 @@ export const publicOnlyMiddleware = (req, res, next) => {
 };
 
 export const passwordUsersOnlyMiddleware = (req, res, next) => {
-  if (req.session.user.kakaoId === true || req.session.user.githubId === true) {
+  if (req.session.user.socialOnly === true) {
     return res.render("edit-profile", {
       errorMessage: "the github login & kakao login can't change password",
     });

@@ -29,4 +29,12 @@ header {
     padding: 5px 10px;
     border-radius: 5px;
   }
+  .header_avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
+  .header_avatar--icon {
+    font-size: 45px;
+  }
 }
