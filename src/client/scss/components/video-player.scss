@@ -4,6 +4,27 @@
   video {
     width: 100%;
   }
+
+  .videoControls__center--play {
+    width: 200px;
+    height: 200px;
+    border-radius: 60%;
+    background-color: rgba($color: white, $alpha: 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    right: 33%;
+    transform: translate(-50%, -50%);
+    i {
+      font-size: 80px;
+    }
+  }
+  .none {
+    display: none;
+  }
+
   .videoControls {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;

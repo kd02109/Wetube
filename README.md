@@ -62,3 +62,9 @@
 ### 8. file uploads using multer
 
 ### 9. webpack with ready frontend
+
+### 10. Make Video Player using vanila JS
+
+### 11. Views Api
+
+### 12. Video Recoder

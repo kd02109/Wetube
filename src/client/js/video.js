@@ -1,5 +1,3 @@
-console.log("video Player!");
-
 const video = document.querySelector("video");
 const playBtn = document.querySelector("#play");
 const muteBtn = document.querySelector("#mute");
@@ -13,7 +11,8 @@ const videoControls = document.querySelector("#videoControls");
 const playBtnIcon = playBtn.querySelector("i");
 const muteBtnIcon = muteBtn.querySelector("i");
 const fullScreenIcon = fullScreen.querySelector("i");
-
+const centerIcon = document.querySelector("#center-play i");
+const centerBox = document.querySelector("#videoControls__center");
 const defalutVolume = 0.2;
 let inputVolume = defalutVolume;
 let eventVolume = defalutVolume;
@@ -22,6 +21,7 @@ let videoPlayStatus = false;
 let setVideoPlayStatus = false;
 let controlsTimeout = null;
 let controlsMovementTimeout = null;
+let controlCenterIcon = null;
 
 const formatTime = (seconds) => {
   if (seconds > 3600) {
@@ -30,12 +30,20 @@ const formatTime = (seconds) => {
     return new Date(seconds * 1000).toISOString().substring(14, 19);
   }
 };
-
+function removeClass() {
+  centerBox.classList.add("none");
+}
 const videoPlay = (event) => {
   if (video.paused) {
     video.play();
+    centerIcon.classList = "fas fa-pause";
+    controlCenterIcon = setTimeout(removeClass, 1000);
   } else {
+    clearTimeout(controlCenterIcon);
+    controlCenterIcon = null;
+    centerBox.classList.remove("none");
     video.pause();
+    centerIcon.classList = "fas fa-play";
   }
   playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
 };
@@ -141,6 +149,24 @@ const handelMouseLeave = () => {
   //다시 화면으로 돌아오면 timeOut을 취소해야 한다.
 };
 
+const handleVideoClick = (event) => {
+  videoPlay();
+};
+
+const handleVideoKey = (event) => {
+  const { keyCode } = event;
+  if (keyCode === 32) {
+    videoPlay();
+  }
+};
+
+const hadleEnded = () => {
+  const { videoid } = videoContainer.dataset;
+  fetch(`/api/videos/${videoid}/view`, {
+    method: "post",
+  });
+};
+
 playBtn.addEventListener("click", videoPlay);
 muteBtn.addEventListener("click", videoMute);
 volumnRange.addEventListener("input", changeVolumn);
@@ -150,5 +176,8 @@ video.addEventListener("timeupdate", handleVideoTime);
 timeLine.addEventListener("input", handleVideoRange);
 timeLine.addEventListener("change", handleTimelineSet);
 fullScreen.addEventListener("click", handleFullScreen);
-video.addEventListener("mousemove", handelMouseMove);
-video.addEventListener("mouseleave", handelMouseLeave);
+videoContainer.addEventListener("mousemove", handelMouseMove);
+videoContainer.addEventListener("mouseleave", handelMouseLeave);
+video.addEventListener("click", handleVideoClick);
+document.addEventListener("keydown", handleVideoKey);
+video.addEventListener("ended", hadleEnded);

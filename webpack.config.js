@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     main: "./src/client/js/main.js",
     videoPlayer: "./src/client/js/video.js",
+    recoder: "./src/client/js/recoder.js",
   },
   plugins: [
     new MiniCssExtractPlugin({
