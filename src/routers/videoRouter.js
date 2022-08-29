@@ -20,7 +20,13 @@ videoRouter
   .route("/upload")
   .all(protectMiddleware)
   .get(upload)
-  .post(multerMiddlewareVideo.single("video"), saevUpload);
+  .post(
+    multerMiddlewareVideo.fields([
+      { name: "video", maxCount: 1 },
+      { name: "thumb", maxCount: 1 },
+    ]),
+    saevUpload
+  );
 videoRouter
   .route("/:id([a-f0-9]{24})/edit")
   .all(protectMiddleware)

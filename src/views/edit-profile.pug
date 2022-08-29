@@ -10,7 +10,7 @@ block content
         input(type="text", name="username", required, placeholder="Wirte ID", value=user.username)
         input(type="text", name="name", required, placeholder="Wirte your name", value=user.name)
         input(type="location", name="location", placeholder="location", value=user.location)
-        input(type="submit", value="Update Profile")
+        input(type="submit", value="Update Profile").submit
         div.edit-profile__password
         if !user.socialOnly
             div.edit-profile__password
