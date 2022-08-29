@@ -15,6 +15,7 @@ export const protectMiddleware = (req, res, next) => {
   if (req.session.loggedIn) {
     next();
   } else {
+    req.flash("error", "Not authorized");
     return res.redirect("/login");
   }
 };
@@ -23,15 +24,15 @@ export const publicOnlyMiddleware = (req, res, next) => {
   if (!req.session.loggedIn) {
     return next();
   } else {
+    req.flash("error", "Not authorized");
     return res.redirect("/");
   }
 };
 
 export const passwordUsersOnlyMiddleware = (req, res, next) => {
   if (req.session.user.socialOnly === true) {
-    return res.render("edit-profile", {
-      errorMessage: "the github login & kakao login can't change password",
-    });
+    req.flash("error", "Not authorized");
+    return res.redirect("/");
   } else {
     return next();
   }

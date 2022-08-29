@@ -81,6 +81,7 @@ export async function postLogin(req, res) {
 }
 
 export function logout(req, res) {
+  req.flash("info", "Bye Bye😸");
   req.session.destroy();
   return res.redirect("/");
 }
@@ -312,5 +313,6 @@ export async function postChangePassword(req, res) {
   await user.save();
   req.session.user.password = user.password;
   req.session.destroy();
+  req.flash("info", "Password Updated!");
   return res.redirect("/login");
 }
