@@ -153,6 +153,7 @@ export const createComment = async (req, res) => {
     session: { user },
   } = req;
   const video = await Video.findById(id);
+  const commentUser = await User.findById(user._id);
 
   if (!video) {
     return res.sendStatus(404);
@@ -163,10 +164,44 @@ export const createComment = async (req, res) => {
     video: id,
   });
   video.comments.push(comment._id);
+  commentUser.comments.push(comment._id);
+
   video.save();
+  commentUser.save();
+
   return res.status(201).json({ newCommentId: comment._id });
 };
 
-export const dleletComment = async (req, res) => {
-  res.end();
+export const deleteComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { text },
+    session: { commentId },
+  } = req;
+  console.log(id, text, commentId);
 };
+
+/*  const {
+    params: { id },
+    session: { user },
+  } = req;
+  console.log(id);
+  const comment = await Comment.findById(id)
+    .populate("video")
+    .populate("owner");
+  const ownerId = comment.owner._id.toString();
+  const userId = user._id.toString();
+  const commentUser = await User.findById(user._id);
+  const commentVideo = await Video.findById(comment.video);
+  if (!comment) {
+    return res.sendStatus(404);
+  } else if (ownerId !== userId) {
+    return res.sendStatus(404);
+  }
+  await comment.findByIdAndDelete(id);
+  comment.save();
+  commentUser.comments.splice(commentUser.comments.indexOf(id), 1);
+  commentUser.save();
+  commentVideo.comments.splice(commentVideo.comments.indexOf(id), 1);
+  commentVideo.save();
+  return res.sendStatus(200);*/
