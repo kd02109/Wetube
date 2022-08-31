@@ -9,17 +9,22 @@ const addComment = (text, id) => {
   const newComment = document.createElement("li");
   const icon = document.createElement("i");
   const span = document.createElement("span");
-  const delet = document.createElement("span");
-  delet.dataset.id = id;
+  const deleteX = document.createElement("span");
+  deleteX.dataset.id = id;
   icon.className = "fas fa-comment";
   span.innerText = `${text}`;
-  delet.innerText = "❌";
-  delet.id = "delete";
+  deleteX.innerText = "❌";
+  deleteX.id = "delete";
   newComment.className = "video__comment";
   newComment.appendChild(icon);
   newComment.appendChild(span);
-  newComment.appendChild(delet);
+  newComment.appendChild(deleteX);
   commentList.prepend(newComment);
+  const deleteBtns = document.querySelectorAll("#delete");
+  deleteBtns.forEach((btn) => {
+    //1 find Btn
+    btn.addEventListener("click", handleDeleteComment);
+  });
 };
 
 const handleSubmit = async (event) => {
@@ -42,22 +47,26 @@ const handleSubmit = async (event) => {
   });
   textarea.value = "";
   const status = response.status;
-  const { newCommentId } = await response.json();
-  addComment(text, newCommentId);
+  if (status === 201) {
+    const { newCommentId } = await response.json();
+    addComment(text, newCommentId);
+  }
 };
 
 const handleDeleteComment = async (event) => {
   //2 fetch.
-  const video = videoContainer.dataset.videoid;
+
   const commentId = event.target.dataset.id;
-  await fetch(`/api/videos/${video}/delete`, {
+  const response = await fetch(`/api/videos/${commentId}/delete`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
-    //objec을 문자로 받아서 돌려준다
-    body: JSON.stringify({ commentId }),
   });
+  const { status } = response;
+  if (status === 201) {
+    event.target.parentNode.remove();
+  }
 };
 
 deleteBtn.forEach((xBtn) => {
@@ -68,6 +77,3 @@ deleteBtn.forEach((xBtn) => {
 if (form) {
   form.addEventListener("submit", handleSubmit);
 }
-
-//2 fetch
-//3 db find
