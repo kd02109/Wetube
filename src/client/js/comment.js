@@ -1,5 +1,8 @@
 const form = document.getElementById("comment-form");
 const videoContainer = document.getElementById("videoContainer");
+const commentBox = document.getElementById("videoComment");
+const deleteBtn = document.querySelectorAll("#delete");
+console.log(deleteBtn);
 
 const addComment = (text, id) => {
   const commentList = document.querySelector(".video__comments ul");
@@ -7,7 +10,7 @@ const addComment = (text, id) => {
   const icon = document.createElement("i");
   const span = document.createElement("span");
   const delet = document.createElement("span");
-  newComment.dataset.id = id;
+  delet.dataset.id = id;
   icon.className = "fas fa-comment";
   span.innerText = `${text}`;
   delet.innerText = "❌";
@@ -40,11 +43,31 @@ const handleSubmit = async (event) => {
   textarea.value = "";
   const status = response.status;
   const { newCommentId } = await response.json();
-  if (status === 201) {
-    addComment(text, newCommentId);
-  }
+  addComment(text, newCommentId);
 };
+
+const handleDeleteComment = async (event) => {
+  //2 fetch.
+  const video = videoContainer.dataset.videoid;
+  const commentId = event.target.dataset.id;
+  await fetch(`/api/videos/${video}/delete`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    //objec을 문자로 받아서 돌려준다
+    body: JSON.stringify({ commentId }),
+  });
+};
+
+deleteBtn.forEach((xBtn) => {
+  //1 find Btn
+  xBtn.addEventListener("click", handleDeleteComment);
+});
 
 if (form) {
   form.addEventListener("submit", handleSubmit);
 }
+
+//2 fetch
+//3 db find
