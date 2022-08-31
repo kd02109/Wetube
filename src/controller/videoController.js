@@ -32,7 +32,7 @@ export async function edit(req, res) {
 
 export async function watch(req, res) {
   const id = req.params.id; //const {id} = req.params
-  const video = await Video.findById(id).populate("owner");
+  const video = await Video.findById(id).populate("owner").populate("comments");
   if (video) {
     return res.render("watch", { pageTitle: video.title, video });
   }
@@ -162,5 +162,11 @@ export const createComment = async (req, res) => {
     owner: user._id,
     video: id,
   });
-  return res.sendStatus(201);
+  video.comments.push(comment._id);
+  video.save();
+  return res.status(201).json({ newCommentId: comment._id });
+};
+
+export const dleletComment = async (req, res) => {
+  res.end();
 };

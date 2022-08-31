@@ -14,7 +14,7 @@ const videoSchema = new mongoose.Schema({
   createdAt: { type: Date, required: true, default: Date.now }, // required:date가 반드시 포함되어야 한다.
   hashtags: [{ type: String, trim: true }],
   fileUrl: { type: String, required: true },
-  thumbUrl: { type: String, required: true },
+  thumbUrl: { type: String },
   meta: {
     views: { type: Number, default: 0, required: true },
     rating: { type: Number, default: 0, required: true },
