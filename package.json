@@ -4,11 +4,13 @@
   "description": "Learn how to make web-page like you-tube",
   "main": "index.js",
   "scripts": {
+    "build:assets": "webpack --mode=production",
     "start": "node build/init.js",
     "build:server": "babel src -d build",
     "dev:server": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:assets": "webpack --config webpack.config.js"
+    "dev:assets": "webpack --mode=development -w",
+    "build": "npm run build:server && npm run build:assets"
   },
   "repository": {
     "type": "git",
