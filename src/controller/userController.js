@@ -19,7 +19,7 @@ export async function postEdit(req, res) {
     body: { email, username, name, location },
     file,
   } = req;
-  console.log(req.session.user);
+  console.log(file);
   let change = [];
   if (sessionEmail !== email) {
     change.push({ email });
@@ -40,7 +40,7 @@ export async function postEdit(req, res) {
     _id,
     {
       //유저가 이미지를 변경하지 않는다면, 어떻게 될까?
-      avatarUrl: file ? file.path : avatarUrl,
+      avatarUrl: file ? file.location : avatarUrl,
       name,
       email,
       username,
