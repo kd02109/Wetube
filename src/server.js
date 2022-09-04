@@ -24,7 +24,14 @@ app.use(express.urlencoded({ extended: true }));
 //app.use(express.text());
 //json을 통해 스트링으로 받은 것을 다시 json 파일로 변경해준다.
 app.use(express.json());
-
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,
